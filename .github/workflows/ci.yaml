@@ -45,7 +45,6 @@ jobs:
   release:
     permissions:
       contents: write
-      releases: write
     needs: build
     if: github.event_name == 'release'
     runs-on: windows-latest
