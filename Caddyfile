@@ -1,0 +1,19 @@
+:8000 {
+    root * ./public
+    file_server
+
+    @hlsFiles {
+        path_regexp hls \.(m3u8|ts)$
+    }
+    header @hlsFiles Access-Control-Allow-Origin *
+
+    @m3u8 {
+        path *.m3u8
+    }
+    header @m3u8 Content-Type application/vnd.apple.mpegurl
+
+    @ts {
+        path *.ts
+    }
+    header @ts Content-Type video/MP2T
+}

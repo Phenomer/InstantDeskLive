@@ -1,0 +1,81 @@
+name: InstantDeskLive CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [ created ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        go-version: ['1.21', '1.22']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Build
+        run: go build -v -o desklive.exe
+
+      - name: Test
+        run: go test -v
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v3
+
+      - name: Upload build artifact
+        if: matrix.go-version == '1.22' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v3
+        with:
+          name: desklive-windows
+          path: |
+            desklive.exe
+            public/
+            Caddyfile
+            process.json
+            README.md
+            LICENSE
+
+  release:
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
+          
+      - name: Build Release Binary
+        run: |
+          go build -v -ldflags="-s -w" -o desklive.exe
+          
+      - name: Create Release Bundle
+        run: |
+          mkdir InstantDeskLive
+          cp desklive.exe InstantDeskLive/
+          cp -r public/ InstantDeskLive/
+          cp Caddyfile InstantDeskLive/
+          cp process.json InstantDeskLive/
+          cp README.md InstantDeskLive/
+          cp LICENSE InstantDeskLive/
+          Compress-Archive -Path InstantDeskLive/* -DestinationPath InstantDeskLive.zip
+        shell: pwsh
+          
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: InstantDeskLive.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Desktop Live</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1" defer></script>
+</head>
+
+<body>
+    <div id="myModal" class="modal" role="dialog" aria-modal="true">
+        <div class="modal-content">
+            <p>配信を見る</p>
+            <button id="playButton" type="button">再生</button>
+        </div>
+    </div>
+    <div id="videoContainer" hidden>
+        <video id="video" controls></video>
+    </div>
+    <script src="index.js" defer></script>
+</body>
+
+</html>
