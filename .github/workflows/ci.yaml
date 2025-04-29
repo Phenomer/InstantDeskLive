@@ -32,6 +32,8 @@ jobs:
 
       - name: Lint
         uses: golangci/golangci-lint-action@v3
+        with:
+          args: run --out-format=colored-line-number
 
       - name: Upload build artifact
         if: matrix.go-version == '1.22' && github.event_name == 'push' && github.ref == 'refs/heads/main'

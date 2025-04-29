@@ -3,7 +3,6 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -14,7 +13,8 @@ import (
 
 // テスト用の一時的なJSONファイルを作成
 func createTempConfig(t *testing.T, processes []ProcessConfig) string {
-	tmpfile, err := ioutil.TempFile("", "process*.json")
+	t.Helper()
+	tmpfile, err := os.CreateTemp("", "process*.json")
 	if err != nil {
 		t.Fatalf("テスト用の一時ファイル作成に失敗: %v", err)
 	}
@@ -63,7 +63,7 @@ func TestLoadConfig(t *testing.T) {
 
 	// 不正なJSONのテスト
 	invalidJSON := filepath.Join(t.TempDir(), "invalid.json")
-	if err := ioutil.WriteFile(invalidJSON, []byte("invalid json"), 0644); err != nil {
+	if err := os.WriteFile(invalidJSON, []byte("invalid json"), 0644); err != nil {
 		t.Fatalf("不正なJSONファイルの作成に失敗: %v", err)
 	}
 
@@ -112,8 +112,6 @@ func TestStartAndTerminateProcesses(t *testing.T) {
 
 	// プロセスを終了
 	terminateProcesses(procs)
-
-	// プロセスが終了したことを確認（完全な確認は難しいが、短い待機を入れる）
 	time.Sleep(500 * time.Millisecond)
 }
 
