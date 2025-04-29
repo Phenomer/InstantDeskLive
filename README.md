@@ -37,6 +37,7 @@ v2.10.0 h1:fonubSaQKF1YANl8TXqGcn4IbIRUDdfAkpcsfI/vX5U=
 ## つかいかた
 
 `desklive.exe`をダブルクリックするだけです。
+起動したら、[http://127.0.0.1:8000/](http://127.0.0.1:8000/)にアクセスしてみてください。
 
 
 ## エンコード・配信対象画面の設定
