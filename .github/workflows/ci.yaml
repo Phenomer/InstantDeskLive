@@ -26,8 +26,6 @@ jobs:
 
       - name: Lint
         uses: golangci/golangci-lint-action@v8
-        with:
-          args: --out-format=colored-line-number
 
       - name: Build
         run: go build -v -o desklive.exe
