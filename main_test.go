@@ -44,7 +44,11 @@ func TestLoadConfig(t *testing.T) {
 	}
 
 	configPath := createTempConfig(t, validProcs)
-	defer os.Remove(configPath)
+	defer func() {
+		if err := os.Remove(configPath); err != nil {
+			t.Errorf("一時ファイルの削除に失敗: %v", err)
+		}
+	}()
 
 	procs, err := loadConfig(configPath)
 	if err != nil {
